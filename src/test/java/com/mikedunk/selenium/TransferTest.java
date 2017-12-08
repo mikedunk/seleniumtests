@@ -3,6 +3,7 @@ package com.mikedunk.selenium;
 
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -33,12 +34,10 @@ class TransferTest {
     static String username = "simpasaiki02@gmail.com";
     static String password = "password";
 
-
     @BeforeAll
 
-
     static void setUp() {
-
+       driver.manage().window().maximize();
         driver.navigate().to(baseUrl);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         login.logonToSite(username,password);
@@ -66,7 +65,7 @@ class TransferTest {
 
 
 
-
+    /**This test attempts to make a transfer **/
     @Test
     void instantTransfer(){
 
@@ -75,22 +74,29 @@ class TransferTest {
         transfer.setSingleTransferProvidusAccountInitiator();
         transfer.setSingleTransferProvidusUser("0123456789");
         transfer.setSingleTransferProvidusAccountAmount("10000");
-        driver.findElement(transfer.singleTransferProvidusAccountNarration).sendKeys("Automated test Auto generate");
+        transfer.setSingleTransferProvidusNarration("Automated test Auto generate");
         driver.findElement(transfer.singleTransferProvidusRadioRecurring).click();
         driver.findElement(transfer.singleTransferProvidusRadioScheduled).click();
         driver.findElement(transfer.singleTransferProvidusRadioInstant).click();
         driver.findElement(transfer.singleTransferProvidusTransferButton).click();
         driver.findElement(By.xpath("//*[@id=\"myModal\"]/div[2]/div/div/confirm-single-transfer-view/div/div[3]/div/div[1]/div/input")).sendKeys("00000");//OTP
         driver.findElement(transfer.singleTransferProvidusModalCompleteButton).click();
-        driver.findElement(transfer.transAlertModalDismiss).click();
-        driver.findElement(transfer.xsingleTransfer).click();
-       // driver.findElement(transfer.singleTransferBack).click();
+        driver.switchTo().activeElement();
+
+        WebElement dismissModal = driver.findElement(transfer.transAlertModalDismiss);
+        JavascriptExecutor executor = (JavascriptExecutor)driver;
+        executor.executeScript("arguments[0].click()", dismissModal);
+
+        WebElement element = driver.findElement(transfer.singleTransferBack);
+        JavascriptExecutor executor1 = (JavascriptExecutor)driver;
+        executor1.executeScript("arguments[0].click()", element);
+
         assertFalse(false);
 
     }
 
 
-
+    /**This test attempts to transfer without a transfer from account specified **/
     @Test
     void instantTransferWithoutInitiator(){
 
@@ -99,7 +105,7 @@ class TransferTest {
        // transfer.setSingleTransferProvidusAccountInitiator();
         transfer.setSingleTransferProvidusUser("0123456789");
         transfer.setSingleTransferProvidusAccountAmount("10000");
-        driver.findElement(transfer.singleTransferProvidusAccountNarration).sendKeys("Automated test Auto generate");
+        transfer.setSingleTransferProvidusNarration("Automated test Auto generate");;
         Boolean bool = driver.findElement(transfer.singleTransferProvidusTransferButton).isEnabled();
         driver.findElement(transfer.singleTransferProvidusTransferButton).click();
 
@@ -114,7 +120,7 @@ class TransferTest {
     }
 
 
-
+    /**This test attempts to transfer nothing i.e zero naira **/
     @Test
     void instantTransferWithoutAmount(){
 
@@ -123,7 +129,7 @@ class TransferTest {
         transfer.setSingleTransferProvidusAccountInitiator();
         transfer.setSingleTransferProvidusUser("0123456789");
         //transfer.setSingleTransferProvidusAccountAmount("10000");
-        driver.findElement(transfer.singleTransferProvidusAccountNarration).sendKeys("Automated test Auto generate");
+        transfer.setSingleTransferProvidusNarration("Automated test Auto generate");
         Boolean bool = driver.findElement(transfer.singleTransferProvidusTransferButton).isEnabled();
         driver.findElement(transfer.singleTransferProvidusRadioScheduled).click();
         driver.findElement(transfer.singleTransferProvidusRadioInstant).click();
@@ -132,6 +138,7 @@ class TransferTest {
 
     }
 
+    /**This test attempts to transfer to an empty account **/
     @Test
     void instantTransferWithoutDestination(){
 
@@ -140,7 +147,7 @@ class TransferTest {
         transfer.setSingleTransferProvidusAccountInitiator();
         //transfer.setSingleTransferProvidusUser("0123456789");
         transfer.setSingleTransferProvidusAccountAmount("10000");
-        driver.findElement(transfer.singleTransferProvidusAccountNarration).sendKeys("Automated test Auto generate");
+        transfer.setSingleTransferProvidusNarration("Automated test Auto generate");
         Boolean bool = driver.findElement(transfer.singleTransferProvidusTransferButton).isEnabled();
 
         driver.findElement(transfer.singleTransferProvidusRadioScheduled).click();
@@ -154,6 +161,7 @@ class TransferTest {
 
     }
 
+    /**This test attempts to transfer to an account with less than 10digits **/
     @Test
     void instantTransferWithIncompleteDestination(){
 
@@ -162,7 +170,7 @@ class TransferTest {
         transfer.setSingleTransferProvidusAccountInitiator();
         transfer.setSingleTransferProvidusUser("012345678");
         transfer.setSingleTransferProvidusAccountAmount("10000");
-        driver.findElement(transfer.singleTransferProvidusAccountNarration).sendKeys("Automated test Auto generate");
+        transfer.setSingleTransferProvidusNarration("Automated test Auto generate");
         Boolean bool = driver.findElement(transfer.singleTransferProvidusTransferButton).isEnabled();
         driver.findElement(transfer.singleTransferProvidusRadioScheduled).click();
         driver.findElement(transfer.singleTransferProvidusRadioInstant).click();
@@ -172,6 +180,8 @@ class TransferTest {
     }
 
 
+    /**This test attempts to transfer to an account other than a Providus Account **/
+
     @Test
     void instantTransferWithNonProvidusAccount(){
 
@@ -180,7 +190,7 @@ class TransferTest {
         transfer.setSingleTransferProvidusAccountInitiator();
         transfer.setSingleTransferProvidusUser("0123456788");
         transfer.setSingleTransferProvidusAccountAmount("10000");
-        driver.findElement(transfer.singleTransferProvidusAccountNarration).sendKeys("Automated test Auto generate");
+        transfer.setSingleTransferProvidusNarration("Automated test Auto generate");
         Boolean boool = driver.findElement(transfer.singleTransferProvidusAccountError).isDisplayed();
         Boolean bool = driver.findElement(transfer.singleTransferProvidusTransferButton).isEnabled();
         driver.findElement(transfer.singleTransferProvidusRadioScheduled).click();

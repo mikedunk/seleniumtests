@@ -117,17 +117,27 @@ public class Transfer {
 
     public void setSingleTransferProvidusAccountInitiator(){
 
+        driver.findElement(singleTransferProvidusInitiator).clear();
         driver.findElement(singleTransferProvidusInitiator).click();
         driver.findElement(singleTransferProvidusSelectInitiator).click();
 
     }
     public void setSingleTransferProvidusAccountAmount(String  amount){
+        driver.findElement(singleTransferProvidusAccountAmount).clear();
         driver.findElement(singleTransferProvidusAccountAmount).sendKeys(amount);
 
 
     }
     public void  setSingleTransferProvidusUser(String acct){
+        driver.findElement(singleTransferProvidusDestinationUser).clear();
     driver.findElement(singleTransferProvidusDestinationUser).sendKeys(acct);
+
+    }
+
+    public void setSingleTransferProvidusNarration(String narration){
+
+        driver.findElement(singleTransferProvidusAccountNarration).clear();
+        driver.findElement(singleTransferProvidusAccountNarration).sendKeys(narration);
 
     }
 
