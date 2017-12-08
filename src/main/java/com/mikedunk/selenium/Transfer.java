@@ -59,9 +59,11 @@ public class Transfer {
     By newBeneficiarySuccessful = By.xpath("//*[@id=\"myModal\"]/div[2]/div/div[2]/alert-component/div/div/div/div[1]/div/p[1]");//or you can use partial linktext
     By okDissmissModalAfterSuccess= By.xpath("//*[@id=\"myModal\"]/div[2]/div/div[2]/alert-component/div/div/div/div[2]/div/button");
 
-    By singleTransferPayFromAccountSelect= By.xpath("//*[@id=\"content-wrapper\"]/merchant-money/single-transfers-view/div/section[2]/div[1]/div[1]/md-card/div/form/div[1]/div[1]/div/div/-/div[2]/sui-select-option");
+    By singleTransferProvidusSelectInitiator=By.xpath("//*[@id=\"content-wrapper\"]/merchant-money/single-transfers-view/div/section[2]/div[1]/div[1]/md-card/div/form/div[1]/div[1]/div/div/sui-select/div[3]/sui-select-option");
+
     By singleAccountTransferFrom = By.xpath("//*[@id=\"content-wrapper\"]/merchant-money/single-transfers-view/div/section[2]/div[1]/div[1]/md-card/div/form/div[1]/div[1]/div/div/sui-select/input");
     By dismissModal = By.xpath("//*[@id=\"Shape\"]");// this so far dismisses all modals;
+    By transAlertModalDismiss = By.xpath("//*[@id=\"myModal\"]/div[2]/div/div[2]/alert-component/div/div/div/div[2]/div/button");
   //  By dismissModal1 = By.id("Shape");
 
 
@@ -87,14 +89,21 @@ public class Transfer {
     By singleTransferToProvidusLinkText = By.partialLinkText(" Providous Bank Account");
     By singleTransferToOtherBanksLinkText = By.partialLinkText("Other Banks Account");
     By singleTransferToBeneficiaryLinkText = By.partialLinkText("Saved Beneficiary");
+    By singleTransferBack = By.xpath("//*[@id=\"content-wrapper\"]/merchant-money/single-transfers-view/div/section[2]/div[1]/div[1]/md-card/md-card-subtitle/span/a");
 
 
     By singleTransferProvidusAccountError= By.xpath("//*[@id=\"content-wrapper\"]/merchant-money/single-transfers-view/div/section[2]/div[1]/div[1]/md-card/div/form/div[1]/div[2]/div[1]/div/p");
     By singleTransferProvidusAccountNarration = By.xpath("//*[@id=\"content-wrapper\"]/merchant-money/single-transfers-view/div/section[2]/div[1]/div[1]/md-card/div/form/div[1]/div[3]/div/div/input");
     By singleTransferProvidusAccountAmount = By.xpath("//*[@id=\"content-wrapper\"]/merchant-money/single-transfers-view/div/section[2]/div[1]/div[1]/md-card/div/form/div[1]/div[2]/div[2]/div/input");
-    By singleTransferBack = By.xpath("//*[@id=\"content-wrapper\"]/merchant-money/single-transfers-view/div/section[2]/div[1]/div[1]/md-card/md-card-subtitle/span/a");
+
     By singleTransferProvidusDestinationUser =By.xpath("//*[@id=\"content-wrapper\"]/merchant-money/single-transfers-view/div/section[2]/div[1]/div[1]/md-card/div/form/div[1]/div[2]/div[1]/div/input");
     By singleTransferProvidusInitiator =  By.xpath("//*[@id=\"content-wrapper\"]/merchant-money/single-transfers-view/div/section[2]/div[1]/div[1]/md-card/div/form/div[1]/div[1]/div/div/sui-select/input");
+    By singleTransferProvidusTransferButton = By.xpath("//*[@id=\"content-wrapper\"]/merchant-money/single-transfers-view/div/section[2]/div[1]/div[1]/md-card/div/form/div[2]/div/div/button/span");
+    By singleTransferProvidusRadioRecurring = By.xpath("//*[@id=\"content-wrapper\"]/merchant-money/single-transfers-view/div/section[2]/div[1]/div[1]/md-card/div/form/div[1]/div[4]/div/div[3]/div/label");
+    By singleTransferProvidusRadioScheduled = By.xpath("//*[@id=\"content-wrapper\"]/merchant-money/single-transfers-view/div/section[2]/div[1]/div[1]/md-card/div/form/div[1]/div[4]/div/div[2]/div/label");
+    By singleTransferProvidusRadioInstant = By.xpath("//*[@id=\"content-wrapper\"]/merchant-money/single-transfers-view/div/section[2]/div[1]/div[1]/md-card/div/form/div[1]/div[4]/div/div[1]/div/label");
+    By singleTransferProvidusModalCompleteButton = By.xpath("//*[@id=\"myModal\"]/div[2]/div/div/confirm-single-transfer-view/div/div[3]/div/div[2]/button/span");
+
     By transferOtherBanksCommercialBank = By.xpath("//*[@id=\"myModal\"]/div[2]/div/div/app-select-category-view/div[2]/div/div/table/tbody/tr[1]/td/p");
 
 
@@ -108,8 +117,8 @@ public class Transfer {
 
     public void setSingleTransferProvidusAccountInitiator(){
 
-        Select dropdown = new Select(driver.findElement(singleTransferProvidusInitiator));
-        dropdown.selectByIndex(0);
+        driver.findElement(singleTransferProvidusInitiator).click();
+        driver.findElement(singleTransferProvidusSelectInitiator).click();
 
     }
     public void setSingleTransferProvidusAccountAmount(String  amount){
@@ -118,7 +127,8 @@ public class Transfer {
 
     }
     public void  setSingleTransferProvidusUser(String acct){
-        driver.findElement(singleTransferProvidusDestinationUser).sendKeys(acct);
+    driver.findElement(singleTransferProvidusDestinationUser).sendKeys(acct);
+
     }
 
 }

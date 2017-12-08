@@ -12,6 +12,8 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
 //import static com.mikedunk.selenium.LoginTest.username;
@@ -57,42 +59,165 @@ class TransferTest {
         String logout = driver.findElement(By.id("logout")).getText();
         //asserts if there is a logout button
         Assertions.assertEquals("Logout",logout, "logout exists...user is logged on");
+        driver.findElement(By.xpath("//*[@id=\"sidebar-nav\"]/money-nav/ul[1]/li[3]/a")).click();
+
+    }
+
+
+
+
+
+    @Test
+    void instantTransfer(){
+
+        driver.findElement(transfer.xsingleTransfer).click();
+        driver.findElement(transfer.singleTransferToProvidus).click();
+        transfer.setSingleTransferProvidusAccountInitiator();
+        transfer.setSingleTransferProvidusUser("0123456789");
+        transfer.setSingleTransferProvidusAccountAmount("10000");
+        driver.findElement(transfer.singleTransferProvidusAccountNarration).sendKeys("Automated test Auto generate");
+        driver.findElement(transfer.singleTransferProvidusRadioRecurring).click();
+        driver.findElement(transfer.singleTransferProvidusRadioScheduled).click();
+        driver.findElement(transfer.singleTransferProvidusRadioInstant).click();
+        driver.findElement(transfer.singleTransferProvidusTransferButton).click();
+        driver.findElement(By.xpath("//*[@id=\"myModal\"]/div[2]/div/div/confirm-single-transfer-view/div/div[3]/div/div[1]/div/input")).sendKeys("00000");//OTP
+        driver.findElement(transfer.singleTransferProvidusModalCompleteButton).click();
+        driver.findElement(transfer.transAlertModalDismiss).click();
+        driver.findElement(transfer.xsingleTransfer).click();
+       // driver.findElement(transfer.singleTransferBack).click();
+        assertFalse(false);
+
+    }
+
+
+
+    @Test
+    void instantTransferWithoutInitiator(){
+
+        driver.findElement(transfer.xsingleTransfer).click();
+        driver.findElement(transfer.singleTransferToProvidus).click();
+       // transfer.setSingleTransferProvidusAccountInitiator();
+        transfer.setSingleTransferProvidusUser("0123456789");
+        transfer.setSingleTransferProvidusAccountAmount("10000");
+        driver.findElement(transfer.singleTransferProvidusAccountNarration).sendKeys("Automated test Auto generate");
+        Boolean bool = driver.findElement(transfer.singleTransferProvidusTransferButton).isEnabled();
+        driver.findElement(transfer.singleTransferProvidusTransferButton).click();
+
+        driver.findElement(transfer.singleTransferProvidusRadioScheduled).click();
+        driver.findElement(transfer.singleTransferProvidusRadioInstant).click();
+
+
+        driver.findElement(transfer.singleTransferBack).click();
+        assertTrue(bool,"Transfer Initiator Empty...Transfer Button Disabled ");
 
 
     }
 
 
 
-       @Test
-       void checkLinks(){
-      //  WebDriver driver = new ChromeDriver();
+    @Test
+    void instantTransferWithoutAmount(){
 
-      driver.findElement(transfer.xtransfer).click();
-      driver.findElement(transfer.xmanageBeneficiary).click();
-      driver.findElement(transfer.addNewBeneficiary).click();
-      driver.findElement(transfer.logoutButton).click();
-      //be sure to dismiss modal
-      Assertions.assertTrue(true);
+        driver.findElement(transfer.xsingleTransfer).click();
+        driver.findElement(transfer.singleTransferToProvidus).click();
+        transfer.setSingleTransferProvidusAccountInitiator();
+        transfer.setSingleTransferProvidusUser("0123456789");
+        //transfer.setSingleTransferProvidusAccountAmount("10000");
+        driver.findElement(transfer.singleTransferProvidusAccountNarration).sendKeys("Automated test Auto generate");
+        Boolean bool = driver.findElement(transfer.singleTransferProvidusTransferButton).isEnabled();
+        driver.findElement(transfer.singleTransferProvidusRadioScheduled).click();
+        driver.findElement(transfer.singleTransferProvidusRadioInstant).click();
+        driver.findElement(transfer.singleTransferBack).click();
+        assertTrue(bool,"Transfer Amount Empty...Transfer Button Disabled ");
 
+    }
 
+    @Test
+    void instantTransferWithoutDestination(){
+
+        driver.findElement(transfer.xsingleTransfer).click();
+        driver.findElement(transfer.singleTransferToProvidus).click();
+        transfer.setSingleTransferProvidusAccountInitiator();
+        //transfer.setSingleTransferProvidusUser("0123456789");
+        transfer.setSingleTransferProvidusAccountAmount("10000");
+        driver.findElement(transfer.singleTransferProvidusAccountNarration).sendKeys("Automated test Auto generate");
+        Boolean bool = driver.findElement(transfer.singleTransferProvidusTransferButton).isEnabled();
+
+        driver.findElement(transfer.singleTransferProvidusRadioScheduled).click();
+        driver.findElement(transfer.singleTransferProvidusRadioInstant).click();
+        driver.findElement(transfer.singleTransferProvidusTransferButton).isEnabled();
+        System.out.println("ive clicked transfer");
+
+        driver.findElement(transfer.singleTransferBack).click();
+        assertTrue(bool,"Transfer Destination  Empty...Transfer Button Disabled ");
+       // driver.findElement(transfer.singleTransferBack).click();
+
+    }
+
+    @Test
+    void instantTransferWithIncompleteDestination(){
+
+        driver.findElement(transfer.xsingleTransfer).click();
+        driver.findElement(transfer.singleTransferToProvidus).click();
+        transfer.setSingleTransferProvidusAccountInitiator();
+        transfer.setSingleTransferProvidusUser("012345678");
+        transfer.setSingleTransferProvidusAccountAmount("10000");
+        driver.findElement(transfer.singleTransferProvidusAccountNarration).sendKeys("Automated test Auto generate");
+        Boolean bool = driver.findElement(transfer.singleTransferProvidusTransferButton).isEnabled();
+        driver.findElement(transfer.singleTransferProvidusRadioScheduled).click();
+        driver.findElement(transfer.singleTransferProvidusRadioInstant).click();
+
+        driver.findElement(transfer.singleTransferBack).click();
+        assertTrue(bool,"Transfer Destination Incomplete...Transfer Button Disabled ");
     }
 
 
     @Test
-    void makeSingleTransfer(){
-        driver.findElement(transfer.xtransfer).click();
+    void instantTransferWithNonProvidusAccount(){
+
         driver.findElement(transfer.xsingleTransfer).click();
-        driver.findElement(transfer.singleTransferToProvidus);
+        driver.findElement(transfer.singleTransferToProvidus).click();
         transfer.setSingleTransferProvidusAccountInitiator();
+        transfer.setSingleTransferProvidusUser("0123456788");
+        transfer.setSingleTransferProvidusAccountAmount("10000");
+        driver.findElement(transfer.singleTransferProvidusAccountNarration).sendKeys("Automated test Auto generate");
+        Boolean boool = driver.findElement(transfer.singleTransferProvidusAccountError).isDisplayed();
+        Boolean bool = driver.findElement(transfer.singleTransferProvidusTransferButton).isEnabled();
+        driver.findElement(transfer.singleTransferProvidusRadioScheduled).click();
+        driver.findElement(transfer.singleTransferProvidusRadioInstant).click();
 
-        transfer.setSingleTransferProvidusAccountAmount("0123456789");
-        transfer.setSingleTransferProvidusUser("0123456789");
-        Boolean bool = driver.findElement(transfer.singleTransferProvidusAccountError).isEnabled();
+        // Assertions.assertFalse(bool,"Transfer Destination is NotProvidus Bank...Transfer Button Disabled ");
 
-
-
-
+        Assertions.assertAll(
+                () -> assertTrue(boool),
+                () -> assertTrue(bool)
+        );
+        driver.findElement(transfer.singleTransferBack).click();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
