@@ -1,6 +1,7 @@
 package com.mikedunk.selenium;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -140,5 +141,56 @@ public class Transfer {
         driver.findElement(singleTransferProvidusAccountNarration).sendKeys(narration);
 
     }
+    /**This method not only checks and sets OTP it also checks the result of the test..if it was successful or failed **/
+    public void checkIfModalExistsAndSetOTP(String otp){
+       try {
+            driver.findElement(By.xpath("//*[@id=\"myModal\"]/div[2]/div/div/confirm-single-transfer-view/div/div[3]/div/div[1]/div/input")).sendKeys(otp);//OTP
+            driver.findElement(singleTransferProvidusModalCompleteButton).click();
 
+          //  driver.switchTo().activeElement();
+            //*[@id="myModal"]   /div[2]/div/div[2]/alert-component/div/div/div/div[1]/div/p[1]
+           Boolean bool = driver.findElement(By.xpath("//*[@id=\"myModal\"]/div[2]/div/div[2]/alert-component/div/div/div/div[1]/div/p[1]")).isEnabled();
+           System.out.println(bool);
+            String transferStatus= driver.findElement(By.xpath("//*[@id=\"myModal\"]/div[2]/div/div[2]/alert-component/div/div/div/div[1]/div/p[1]")).getText();
+           System.out.println("Transaction Status:  "+transferStatus);
+            driver.switchTo().activeElement();
+
+            WebElement dismissModal = driver.findElement(transAlertModalDismiss);
+            JavascriptExecutor executor = (JavascriptExecutor)driver;
+            executor.executeScript("arguments[0].click()", dismissModal);
+
+            WebElement element = driver.findElement(singleTransferBack);
+            JavascriptExecutor executor1 = (JavascriptExecutor)driver;
+            executor1.executeScript("arguments[0].click()", element);
+
+            //return transferStatus;
+        }catch (org.openqa.selenium.NoSuchElementException e){
+
+            System.out.println("Modal didn't load cos of incorrect input");
+            e.getMessage();
+            driver.findElement(singleTransferBack).click();
+        }
+
+
+
+    }
+    public void testRadioButtons(){
+        driver.findElement(singleTransferProvidusRadioScheduled).click();
+        driver.findElement(singleTransferProvidusRadioInstant).click();
+        driver.findElement(singleTransferProvidusTransferButton).click();
+    }
+
+    public void navigateToProvidus(){
+        driver.findElement(xsingleTransfer).click();
+        driver.findElement(singleTransferToProvidus).click();
+    }
+
+    public void attemptSingleTransfer(String amount, String destinationAccount, String narration){
+
+        setSingleTransferProvidusUser(destinationAccount);
+        setSingleTransferProvidusAccountAmount(amount);
+        setSingleTransferProvidusNarration(narration);
+
+        driver.findElement(singleTransferProvidusTransferButton).click();
+    }
 }
