@@ -46,10 +46,9 @@ class TransferTest {
         wait.until((Function<WebDriver, Object>) driver -> driver.findElement(By.id("logout")));
         String logout = driver.findElement(By.id("logout")).getText();
         //asserts if there is a logout button
-        Assertions.assertEquals("Logout",logout, "logout exists...user is logged on");
+        Assertions.assertEquals("Logout",logout, "user exists...user is logged on");
         driver.findElement(By.xpath("//*[@id=\"sidebar-nav\"]/money-nav/ul[1]/li[3]/a")).click();
-
-    }
+       }
 
 
 
@@ -62,7 +61,18 @@ class TransferTest {
         transfer.setSingleTransferProvidusAccountInitiator();
         transfer.attemptSingleTransfer("10000","0123456789","Automated test Auto generate");
         transfer.checkIfModalExistsAndSetOTP("0000");
-       // driver.findElement(transfer.singleTransferBack).click();
+        assertTrue(true);
+
+    }
+
+    /**This test attempts to transfer without OTP**/
+     @Test
+    void instantTransferWithoutOTP() {
+
+        transfer.navigateToProvidus();
+        transfer.setSingleTransferProvidusAccountInitiator();
+        transfer.attemptSingleTransfer("10000","0123456789","Automated test Auto generate");
+        transfer.checkIfModalExistsAndSetOTP("");
         assertTrue(true);
 
     }
@@ -75,7 +85,6 @@ class TransferTest {
         transfer.navigateToProvidus();
         transfer.attemptSingleTransfer("10000","0123456789","Automated test Auto generate");
         transfer.checkIfModalExistsAndSetOTP("0000");
-
         assertTrue(true,"Attempted Transfer Without Initiator Account");
 
 
@@ -90,7 +99,6 @@ class TransferTest {
         transfer.setSingleTransferProvidusAccountInitiator();
         transfer.attemptSingleTransfer("","0123456789","Automated test Auto generate");
         transfer.checkIfModalExistsAndSetOTP("0000");
-
         assertTrue(true,"Attempted transfer without Amount");
     }
 
@@ -102,7 +110,6 @@ class TransferTest {
         transfer.setSingleTransferProvidusAccountInitiator();
         transfer.attemptSingleTransfer("10000","","Automated test Auto generate");
         transfer.checkIfModalExistsAndSetOTP("0000");
-
         assertTrue(true,"Attempted transfer without Destination");
     }
 
@@ -114,7 +121,6 @@ class TransferTest {
         transfer.setSingleTransferProvidusAccountInitiator();
         transfer.attemptSingleTransfer("10000","01234567","Automated test Auto generate");
         transfer.checkIfModalExistsAndSetOTP("0000");
-
         assertTrue(true,"Attempted transfer with incomplete Destination");
     }
 
@@ -123,12 +129,10 @@ class TransferTest {
 
     @Test
     void instantTransferWithNonProvidusAccount(){
-
         transfer.navigateToProvidus();
         transfer.setSingleTransferProvidusAccountInitiator();
         transfer.attemptSingleTransfer("10000","9987654462","Automated test Auto generate");
         transfer.checkIfModalExistsAndSetOTP("0000");
-        
         assertTrue(true,"Attempted transfer to Non Providus  Destination");
     }
 
