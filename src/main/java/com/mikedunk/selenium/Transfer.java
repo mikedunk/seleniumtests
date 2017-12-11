@@ -1,10 +1,8 @@
 package com.mikedunk.selenium;
 
+import com.aventstack.extentreports.ExtentTest;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.Select;
-
-import java.util.List;
-import java.util.stream.IntStream;
+import org.openqa.selenium.NoSuchElementException;
 
 public class Transfer {
 
@@ -12,6 +10,7 @@ public class Transfer {
 
 
     WebDriver driver;
+    ExtentTest logger;
 
     public Transfer(WebDriver driver ){
 
@@ -64,62 +63,68 @@ public class Transfer {
 
 
 
-    public void setSingleTransferProvidusAccountInitiator(){
+    public void setSingleTransferProvidusAccountInitiator() throws WebDriverException{
 
         driver.findElement(singleTransferProvidusInitiator).clear();
         driver.findElement(singleTransferProvidusInitiator).click();
         driver.findElement(singleTransferProvidusSelectInitiator).click();
 
     }
-    public void setSingleTransferProvidusAccountAmount(String  amount){
+    public void setSingleTransferProvidusAccountAmount(String  amount)throws WebDriverException{
 
         driver.findElement(singleTransferProvidusAccountAmount).clear();
         driver.findElement(singleTransferProvidusAccountAmount).sendKeys(amount);
 
 
     }
-    public void  setSingleTransferProvidusUser(String acct){
+    public void  setSingleTransferProvidusUser(String acct)throws WebDriverException{
 
         driver.findElement(singleTransferProvidusDestinationUser).clear();
         driver.findElement(singleTransferProvidusDestinationUser).sendKeys(acct);
 
     }
 
-    public void setSingleTransferProvidusNarration(String narration){
+    public void setSingleTransferProvidusNarration(String narration)throws WebDriverException{
 
         driver.findElement(singleTransferProvidusAccountNarration).clear();
         driver.findElement(singleTransferProvidusAccountNarration).sendKeys(narration);
 
     }
     /**This method not only checks and sets OTP it also checks the result of the test..if it was successful or failed **/
-    public void checkIfModalExistsAndSetOTP(String otp){
+    public void checkIfModalExistsAndSetOTP(String otp, ExtentTest logger)throws WebDriverException{
        try {
 
            driver.findElement(By.xpath("//*[@id=\"myModal\"]/div[2]/div/div/confirm-single-transfer-view/div/div[3]/div/div[1]/div/input")).sendKeys(otp);//OTP
-
            driver.findElement(singleTransferProvidusModalCompleteButton).click();
-           Boolean bool= driver.findElement(By.xpath("//*[@id=\"myModal\"]/div[2]/div/div[2]/alert-component/div/div/div/div[1]/div/p[1]")).isEnabled();
+
            String transferStatus= driver.findElement(By.xpath("//*[@id=\"myModal\"]/div[2]/div/div[2]/alert-component/div/div/div/div[1]/div/p[1]")).getText();
            System.out.println("Transaction Status:  "+transferStatus);
+           logger.info("Transaction status:"+transferStatus);
            driver.switchTo().activeElement();
            driver.findElement(closeModalSelector).click();
+
+           //WebElement element1 = driver.findElement(closeModalSelector);
+           //JavascriptExecutor executor = (JavascriptExecutor)driver;
+           //executor.executeScript("arguments[0].click()", element1);
+
            WebElement element = driver.findElement(singleTransferBack);
            JavascriptExecutor executor1 = (JavascriptExecutor)driver;
            executor1.executeScript("arguments[0].click()", element);
 
 
-        }catch (org.openqa.selenium.NoSuchElementException e){
+        }catch (NoSuchElementException e){
 
 
-            e.getMessage();
+           // e.getMessage();
             try {
                 driver.findElement(singleTransferBack).click();
                 System.out.println("Modal didn't load cos of incorrect input");
+                logger.info("Wrong Input Combination");
             }catch(WebDriverException ew){
                 ew.getMessage();
                 System.out.println("Invalid OTP");
+                logger.info("No OTP Supplied");
                 driver.findElement(closeModalSelector).click();
-
                 WebElement element = driver.findElement(singleTransferBack);
                JavascriptExecutor executor1 = (JavascriptExecutor)driver;
                executor1.executeScript("arguments[0].click()", element);
@@ -132,19 +137,19 @@ public class Transfer {
 
 
     }
-    public void testRadioButtons(){
+    public void testRadioButtons()throws WebDriverException{
         driver.findElement(singleTransferProvidusRadioScheduled).click();
         driver.findElement(singleTransferProvidusRadioInstant).click();
         driver.findElement(singleTransferProvidusTransferButton).click();
     }
 
-    public void navigateToProvidus(){
+    public void navigateToProvidus()throws WebDriverException{
         driver.findElement(xsingleTransfer).click();
         driver.findElement(singleTransferToProvidus).click();
 
     }
 
-    public void attemptSingleTransfer(String amount, String destinationAccount, String narration){
+    public void attemptSingleTransfer(String amount, String destinationAccount, String narration)throws WebDriverException {
 
         setSingleTransferProvidusUser(destinationAccount);
         setSingleTransferProvidusAccountAmount(amount);

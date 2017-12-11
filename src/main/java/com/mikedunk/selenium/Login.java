@@ -1,7 +1,9 @@
 package com.mikedunk.selenium;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public class Login {
@@ -50,6 +52,19 @@ public class Login {
         this.setPassword(password);
         driver.findElement(By.id("bs-carousel")).click();
         this.clickLogin();
+
+    }
+
+    public String checkIfLoggedOn() throws WebDriverException{
+        try {
+            String logout = driver.findElement(By.id("logout")).getText();
+            System.out.println(logout);
+            driver.findElement(By.id("logout")).click();
+            return logout;
+        }catch (NoSuchElementException e){
+            return "notLoggedOn";
+        }
+
 
     }
 }

@@ -1,10 +1,13 @@
 package com.mikedunk.selenium;
 
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.InvalidElementStateException;
-import org.openqa.selenium.NoSuchElementException;
+
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import  org.junit.jupiter.api.Assertions.*;
@@ -23,16 +26,23 @@ import java.util.concurrent.TimeUnit;
    public static String baseUrl;
    private static  WebDriver driver = new ChromeDriver();
    private static   Login login;
+   static ExtentHtmlReporter htmlReporter = new ExtentHtmlReporter("src/testreports/logineports.html");
+   static ExtentReports extent ;
+   ExtentTest logger ;
 
 
-    private static void navigate(){
+    private static void navigate()throws WebDriverException{
 
        driver.navigate().to( baseUrl);
+      // driver.manage().window().maximize();
        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
     };
 
 
     public static void init(){
+        extent = new ExtentReports();
+        extent.attachReporter(htmlReporter);
+
         try {
             File file = new File("src/test/test.properties");
             FileInputStream fileInput = new FileInputStream(file);
@@ -65,13 +75,13 @@ import java.util.concurrent.TimeUnit;
     @Test
    void validLogin() {
         //this method tests valid login credentials
-
+       logger = extent.createTest("Valid Login ", "Logs In to App With Right Credentials") ;
        Login login= new Login(driver);
        login.logonToSite(username,password);
+       String status =login.checkIfLoggedOn();
+       Assertions.assertEquals("Logout",status);
+       logger.log(Status.PASS,"Logged on successfully" );
 
-       String logout = driver.findElement(By.id("logout")).getText();
-       Assertions.assertEquals("Logout",logout);
-       driver.findElement(By.id("logout")).click();
 
 
 
@@ -79,64 +89,96 @@ import java.util.concurrent.TimeUnit;
     @Test
      void falseIdLogin(){
         //this method tests invalid login/password combo
+        logger = extent.createTest("Invalid Credentials","Attempts a login with wrong Credentials");
         login = new Login(driver);
         login.logonToSite("invalid", "#########");
-        Boolean bool = driver.findElement(login.errorDiv).isEnabled();
-        System.out.println(bool);
-        Assertions.assertTrue(bool);
-
+        String status =login.checkIfLoggedOn();
+       if (status =="logOut") {
+           Assertions.assertNotEquals("Logout", status);
+           logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
+       }
+       else logger.log(Status.FAIL, "logged in");
     }
 
     @Test
      void correctUserInvalidPass(){
-        login = new Login(driver);
-        login.logonToSite(username, "\u00A0");
-        Boolean bool = driver.findElement(login.errorDiv).isEnabled();
-        System.out.println(bool);
-        Assertions.assertTrue(bool);
+       logger = extent.createTest("Invalid Password ", "Attempts to Login with Invalid Password") ;
+       login = new Login(driver);
+       login.logonToSite(username, "\u00A0");
+        String status1 =login.checkIfLoggedOn();
+        if (status1 =="logOut") {
+            Assertions.assertNotEquals("Logout", status1);
+            logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
+        }
+        else logger.log(Status.FAIL,"logged in");
     }
 
 
     @Test
     void correctPassInvalidUser(){
+        logger = extent.createTest("Invalid User ", "Attempts to Login with Invalid Username") ;
         login = new Login(driver);
 
         login.logonToSite("invalidUser",password);
-        Boolean bool = driver.findElement(login.errorDiv).isEnabled();
-        System.out.println(bool);
-        Assertions.assertTrue(bool);
+        String status1 =login.checkIfLoggedOn();
+        if (status1 =="logOut") {
+            Assertions.assertNotEquals("Logout", status1);
+            logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
+        }
+        else logger.log(Status.FAIL,"logged in");
     }
 
     @Test
-    void blankInput()  {
+    void blankInput() {
+        logger = extent.createTest("Blank Input ", "Attempts to Login with Blank Credentials") ;
         login = new Login(driver);
-
-        login.logonToSite("","");
-        Boolean bool =  driver.findElement(login.xsubmit).isEnabled();
-        Assertions.assertFalse(bool);
+        login.logonToSite("", "");
+        String status1 =login.checkIfLoggedOn();
+        if (status1 =="logOut") {
+            Assertions.assertNotEquals("Logout", status1);
+            logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
+        }
+        else logger.log(Status.FAIL,"logged in");
     }
-
 
 
     @Test
     void noPassword(){
+        logger = extent.createTest("No Password ", "Attempts to Login without Password") ;
         login = new Login(driver);
-        login.setUsername("username");
-        Boolean bool =  driver.findElement(login.xsubmit).isEnabled();
-        Assertions.assertFalse(bool);
+        login.logonToSite(username,"");
+        String status1 =login.checkIfLoggedOn();
+        if (status1 =="logOut") {
+            Assertions.assertNotEquals("Logout", status1);
+            logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
+        }
+        else logger.log(Status.FAIL,"logged in");
     }
+
 
     @Test
     void noUsername(){
+        logger = extent.createTest("No Username ", "Attempts to Login with No Username") ;
         login = new Login(driver);
-        login.logonToSite("",password);
-        Boolean bool =  driver.findElement(login.xsubmit).isEnabled();
-        Assertions.assertFalse(bool);
+       // login.setUsername("");
+        login.logonToSite("", "password");
+        String status1 =login.checkIfLoggedOn();
+        if (status1 =="logOut") {
+            Assertions.assertNotEquals("Logout", status1);
+            logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
+        }
+        else logger.log(Status.FAIL,"logged in");
     }
 
     @Test
     void signUp(){
         //implement sign up or create new user 
+
+    }
+    @AfterEach
+     void clear (){
+        driver.findElement(login.xpassword).clear();
+        driver.findElement(login.xusername).clear();
 
     }
 
@@ -145,6 +187,7 @@ import java.util.concurrent.TimeUnit;
     @AfterAll
     static void tearDown() {
         //LOG and send mail
+        extent.flush();
         driver.close();
         driver.quit();
 
