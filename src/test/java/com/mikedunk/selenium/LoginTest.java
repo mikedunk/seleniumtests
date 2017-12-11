@@ -92,12 +92,12 @@ import java.util.concurrent.TimeUnit;
         logger = extent.createTest("Invalid Credentials","Attempts a login with wrong Credentials");
         login = new Login(driver);
         login.logonToSite("invalid", "#########");
-        String status =login.checkIfLoggedOn();
-       if (status =="logOut") {
-           Assertions.assertNotEquals("Logout", status);
-           logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
+        String status1 =login.checkIfLoggedOn();
+       if (status1 =="logOut") {
+           Assertions.assertNotEquals("Logout", status1);
+           logger.log(Status.FAIL, "logged in");
        }
-       else logger.log(Status.FAIL, "logged in");
+       else  logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
     }
 
     @Test
@@ -108,11 +108,10 @@ import java.util.concurrent.TimeUnit;
         String status1 =login.checkIfLoggedOn();
         if (status1 =="logOut") {
             Assertions.assertNotEquals("Logout", status1);
-            logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
+            logger.log(Status.FAIL, "logged in");
         }
-        else logger.log(Status.FAIL,"logged in");
+        else  logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
     }
-
 
     @Test
     void correctPassInvalidUser(){
@@ -123,9 +122,9 @@ import java.util.concurrent.TimeUnit;
         String status1 =login.checkIfLoggedOn();
         if (status1 =="logOut") {
             Assertions.assertNotEquals("Logout", status1);
-            logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
+            logger.log(Status.FAIL, "logged in");
         }
-        else logger.log(Status.FAIL,"logged in");
+        else  logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
     }
 
     @Test
@@ -136,9 +135,9 @@ import java.util.concurrent.TimeUnit;
         String status1 =login.checkIfLoggedOn();
         if (status1 =="logOut") {
             Assertions.assertNotEquals("Logout", status1);
-            logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
+            logger.log(Status.FAIL, "logged in");
         }
-        else logger.log(Status.FAIL,"logged in");
+        else  logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
     }
 
 
@@ -150,11 +149,10 @@ import java.util.concurrent.TimeUnit;
         String status1 =login.checkIfLoggedOn();
         if (status1 =="logOut") {
             Assertions.assertNotEquals("Logout", status1);
-            logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
+            logger.log(Status.FAIL, "logged in");
         }
-        else logger.log(Status.FAIL,"logged in");
+        else  logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
     }
-
 
     @Test
     void noUsername(){
@@ -165,9 +163,9 @@ import java.util.concurrent.TimeUnit;
         String status1 =login.checkIfLoggedOn();
         if (status1 =="logOut") {
             Assertions.assertNotEquals("Logout", status1);
-            logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
+            logger.log(Status.FAIL, "logged in");
         }
-        else logger.log(Status.FAIL,"logged in");
+        else  logger.log(Status.PASS, "Couldn't log in...Invalid Credentials ");
     }
 
     @Test
