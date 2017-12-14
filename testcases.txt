@@ -1,0 +1,77 @@
+###############################THIS IS THE TEST TEMPLATE FOR THE WEB API  ################################
+
+
+Super Modules
+===> (1)Login....................depends on navigating to site..............
+
+																																																	Keys
+Login	=> Login													                                                        ==> Modules
+		* Valid Login																																								=>  Test Scenarios
+		*Invalid Login									                                                     				**  Test cases
+			=> Wrong Passwords and/or Username Combo				
+			=> Blank Pass and/or Username combo
+
+
+
+
+
+===>(2) Transfer........depends on successful login.......................
+
+		
+module	===>Manage Beneficiary
+		==> Create New Beneficiary
+				**create a new beneficiary
+				**attmpt to add an existing user as a new beneficiary
+				
+
+
+
+
+
+module  ===>Single Transfer
+		==>To ProvidusBank
+		
+		
+		
+		=>Instant
+				**provide valid details
+					*** attempt to make transfer with OTP (does otp expire?how soon:why)
+					*** attempt to make transfer without OTP 
+				**provide transfer details without intiator
+				**provide transfer details without amount
+			`	**provide transfer details without destination 
+				**provide transfer details with incomplete destination
+				**provide transfer details with non Providus Bank destination
+			
+
+			=>Scheduled
+				**provide valid details
+					*** attempt to make transfer with OTP (does otp expire?how soon:why)
+					*** attempt to make transfer without OTP 
+				**provide transfer details without intiator
+				**provide transfer details without amount
+			`	**provide transfer details without destination 
+				**provide transfer details with incomplete destination
+				**provide transfer details with non Providus Bank destination
+				**attempt to create with invalid dates and time
+			=> Recurring
+				**provide valid details
+					*** attempt to make transfer with OTP (does otp expire?how soon:why)
+					*** attempt to make transfer without OTP 
+				**provide transfer details without intiator
+				**provide transfer details without amount
+			`	**provide transfer details without destination 
+				**provide transfer details with incomplete destination
+				**provide transfer details with non Providus Bank destination
+				** attempt to create with invalid dates and times (if its recurring monthly..."to"dates should be disabled)
+		==> To Other Bank
+			=>Instant
+			=>Scheduled
+			=> Recurring
+		==> To beneficiary
+			=>Instant
+			=>Scheduled
+			=> Recurring
+
+module => bulk transfer.............depends on successful login.................
+
